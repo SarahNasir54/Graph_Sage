@@ -50,11 +50,11 @@ def extract_features(post_id):
         scount = post.get("statuses_count", 0)
         friends = post.get("friends_count", 0)
         bicount = post.get("bi_followers_count", 0)
-        print("text:", text)
-        print("followers count:", fcount)
-        print("status count:", scount)
-        print("friends count:", friends)
-        print("bi_followers_count", bicount)
+        # print("text:", text)
+        # print("followers count:", fcount)
+        # print("status count:", scount)
+        # print("friends count:", friends)
+        # print("bi_followers_count", bicount)
 
 
         user_features = torch.tensor([
@@ -63,55 +63,55 @@ def extract_features(post_id):
             friends,
             bicount
             ], dtype=torch.float)
-        print(user_features.shape)
+        #print(user_features.shape)
 
         embedding = make_embeddings(text)
-        print("Embedding shape:", embedding.dim())
+        #print("Embedding shape:", embedding.dim())
 
         if embedding.dim() == 1:
              unsqueeze_embedding = embedding.unsqueeze(0)
              unsqueeze_users = user_features.repeat(unsqueeze_embedding.size(0), 1)
              combined_features = torch.cat([unsqueeze_users, unsqueeze_embedding], dim=1)
-             print("Unsqueeze user shape:",unsqueeze_users.shape)
-             print("Unsqueeze embedding shape: ", unsqueeze_embedding.shape)
-             print("Combined features shape:", combined_features.shape)
+            #  print("Unsqueeze user shape:",unsqueeze_users.shape)
+            #  print("Unsqueeze embedding shape: ", unsqueeze_embedding.shape)
+            #  print("Combined features shape:", combined_features.shape)
         else:
              unsqueeze_users = user_features.repeat(embedding.size(0), 1)
              combined_features = torch.cat([unsqueeze_users, embedding], dim=1)
-             print("Unsqueeze user shape:",unsqueeze_users.shape)
-             print("Combined features shape:", combined_features.shape)
+            #  print("Unsqueeze user shape:",unsqueeze_users.shape)
+            #  print("Combined features shape:", combined_features.shape)
 
         all_combined_features.append(combined_features)
-        print("All features:", all_combined_features)
+        # print("All features:", all_combined_features)
 
     # Save the combined features to a PyTorch file (.pth)
-    torch.save(all_combined_features, f"node_features_{post_id}.pth")
+    torch.save(all_combined_features, f"Node_features/node_features_{post_id}.pth")
 
     return all_combined_features
 
-source_posts_count = 0
-# Open the file in read mode and process it line by line
-with open(file_path, 'r') as file:
-        for line in file:
-            if source_posts_count >= 2:
-                 break
-            # Strip newline characters and print each line
-            current_line = line.strip()
+# source_posts_count = 0
+# # Open the file in read mode and process it line by line
+# with open(file_path, 'r') as file:
+#         for line in file:
+#             if source_posts_count >= 2:
+#                  break
+#             # Strip newline characters and print each line
+#             current_line = line.strip()
 
-            all_ids = re.split(r'\s+', current_line)
+#             all_ids = re.split(r'\s+', current_line)
 
-            print("Length of all the tokens:", len(all_ids))
+#             print("Length of all the tokens:", len(all_ids))
         
-            print("label:", all_ids[1].split(":")[1])
+#             print("label:", all_ids[1].split(":")[1])
 
-            source_post = all_ids[2]
-            print("source post:", source_post)
+#             source_post = all_ids[2]
+#             print("source post:", source_post)
            
-#           retweet_ids = all_ids[3:]
+# #           retweet_ids = all_ids[3:]
 
-            node_features = extract_features(source_post)
-            print(node_features)
-            source_posts_count += 1
+#             node_features = extract_features(source_post)
+#             print(node_features)
+#             source_posts_count += 1
 
         # #print("re-tweet ids:", retweet_ids)
 
