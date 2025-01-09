@@ -1,0 +1,10 @@
+Weibo/
+.vscode/
+*.log
+*.pyc
+*.pyo
+Weibo.txt
+Weibo_graphs/
+_pycache_/
+10031080900.pth
+node_features_10031080900.pth
