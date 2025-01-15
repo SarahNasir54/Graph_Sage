@@ -45,7 +45,12 @@ def extract_features(post_id):
     #print(pretty_json)
 
     for post in data:
+        #id = post.get("id", "")
         text = post.get("text", "")
+        if text == "":
+            embedding = torch.zeros(1, 1024, dtype=torch.float)
+        else:
+            embedding = make_embeddings(text)
         fcount =  post.get("followers_count", 0)
         scount = post.get("statuses_count", 0)
         friends = post.get("friends_count", 0)
@@ -65,7 +70,7 @@ def extract_features(post_id):
             ], dtype=torch.float)
         #print(user_features.shape)
 
-        embedding = make_embeddings(text)
+        #embedding = make_embeddings(text)
         #print("Embedding shape:", embedding.dim())
 
         if embedding.dim() == 1:
@@ -82,38 +87,39 @@ def extract_features(post_id):
             #  print("Combined features shape:", combined_features.shape)
 
         all_combined_features.append(combined_features)
-        # print("All features:", all_combined_features)
+        #print("All features:", all_combined_features)
 
     # Save the combined features to a PyTorch file (.pth)
     torch.save(all_combined_features, f"Node_features/node_features_{post_id}.pth")
 
     return all_combined_features
 
-# source_posts_count = 0
-# # Open the file in read mode and process it line by line
-# with open(file_path, 'r') as file:
-#         for line in file:
-#             if source_posts_count >= 2:
-#                  break
-#             # Strip newline characters and print each line
-#             current_line = line.strip()
+'''
+source_posts_count = 0
+# Open the file in read mode and process it line by line
+with open(file_path, 'r') as file:
+        for line in file:
+            if source_posts_count >= 2:
+                 break
+            # Strip newline characters and print each line
+            current_line = line.strip()
 
-#             all_ids = re.split(r'\s+', current_line)
+            all_ids = re.split(r'\s+', current_line)
 
-#             print("Length of all the tokens:", len(all_ids))
+            print("Length of all the tokens:", len(all_ids))
         
-#             print("label:", all_ids[1].split(":")[1])
+            print("label:", all_ids[1].split(":")[1])
 
-#             source_post = all_ids[2]
-#             print("source post:", source_post)
+            source_post = all_ids[2]
+            print("source post:", source_post)
            
-# #           retweet_ids = all_ids[3:]
+#           retweet_ids = all_ids[3:]
 
-#             node_features = extract_features(source_post)
-#             print(node_features)
-#             source_posts_count += 1
+            node_features = extract_features(10031994215)
+            print(node_features)
+            source_posts_count += 1
 
         # #print("re-tweet ids:", retweet_ids)
 
 
-        # break
+        # break'''
